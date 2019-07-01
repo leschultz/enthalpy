@@ -1,11 +1,5 @@
 # Written by Lane enrique Schultz
 
-# This input file can be used to hold at a beginning temperature, then
-# ascend or descend into a final tempeerature for a number of steps, then
-# hold at a final temperature.
-
-# Specifics regarding definable parameters are covered by the READMEs
-
 ###############################################################################
 
 # Starting parameters
@@ -29,11 +23,7 @@ variable                                    lattice_parm              equal  #re
 # Time variables
 variable                                    mytimestep                equal  #replace_timestep#
 
-# Random seed
-variable                                    seed                      equal  #replace_seed#
-
 # Data output
-variable                                    mydumprate                equal  #replace_dumprate#
 variable                                    data_file_characteristics string system.txt
 variable                                    data_file_dump_rate       string traj.lammpstrj
 variable                                    data_positions_final      string final.dat
@@ -46,11 +36,11 @@ lattice                                     ${unit_cell_type} ${lattice_parm}
 region                                      my_box block 0 ${side} 0 ${side} 0 ${side}
 create_box                                  2 my_box
 create_atoms                                1 box
-set                                         group all type/fraction 2 ${fraction} 591904
+set                                         group all type/fraction 2 ${fraction} 1
 
 ################################################################################
 
-# Data
+# Potential Data
 pair_style                                  ${potential_type}
 pair_coeff                                  * * ${potential} #replace_elements#
 
@@ -72,17 +62,22 @@ timestep                                    ${mytimestep}
 
 ################################################################################
 
+# Start of run
+min_style #replace_min_style#
+#replace_holds#
+
+################################################################################
+
 # Save atom positions at an interval
-dump                                        my_dump_rate all custom ${mydumprate} ${data_file_dump_rate} id type xu yu zu
+dump                                        my_dump_rate all custom 1 ${data_file_dump_rate} id type xu yu zu
 dump_modify                                 my_dump_rate sort id
 
 ################################################################################
 
 # Open save data
-fix                                         data_saving all ave/time 1 1 ${mydumprate} c_mytemp c_mypress v_myvol c_PE c_KE file ${data_file_characteristics}
+fix                                         data_saving all ave/time 1 1 1 c_mytemp c_mypress v_myvol c_PE c_KE file ${data_file_characteristics}
 
-# Start of run
-#replace_holds#
+run 0
 
 # Close save data
 unfix                                       data_saving

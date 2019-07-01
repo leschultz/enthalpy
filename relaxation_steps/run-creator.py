@@ -10,32 +10,20 @@ from functions import *
 runs = int(sys.argv[1])  # The number of runs to generate
 template = sys.argv[2]  # Template file path
 elements = sys.argv[3]  # Elements
-fraction = sys.argv[4]  # Fraction of second element
+fraction = float(sys.argv[4])  # Fraction of second element
 potential = sys.argv[5]  # The potential used
 potential_type = sys.argv[6]  # The type of potential
-side = sys.argv[7]  # The length of the cubic simulation box
+side = int(sys.argv[7])  # The length of the cubic simulation box
 unit_cell_type = sys.argv[8]  # fcc, hcp, or bcc
-lattice_param = sys.argv[9]  # The lattice paramter
-timestep = sys.argv[10]  # The timestep
-dump_rate = sys.argv[11]  # The rate to dump data
-ensemble = sys.argv[12]  # The ensemble for the holds
-vols = sys.argv[13]  # The volume for nvt holds (write None for npt)
-holds = sys.argv[14:]  # temperature and holds as tuples
+lattice_param = float(sys.argv[9])  # The lattice paramter
+timestep = float(sys.argv[10])  # The timestep
+min_style = sys.argv[11]  # The energy minimization style
+iterations = int(sys.argv[12])  # The number of minimization iterations
 
 # Open and read template
 template = open(template)
 template_contents = template.read()
 template.close()
-
-# Format the holds
-holds = list(map(literal_eval, holds))
-
-# Format the volumes
-try:
-    vols = literal_eval(vols)
-
-except Exception:
-    pass
 
 runs = np.arange(runs)
 runs = ['run_'+str(i) for i in runs]
@@ -51,10 +39,8 @@ for run in runs:
                            unit_cell_type,
                            lattice_param,
                            timestep,
-                           dump_rate,
-                           ensemble,
-                           vols,
-                           holds,
+                           min_style,
+                           iterations
                            )
 
     # Write the input file
