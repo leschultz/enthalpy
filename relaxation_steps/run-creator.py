@@ -7,48 +7,49 @@ import os
 
 from functions import *
 
-runs = int(sys.argv[1])  # The number of runs to generate
-template = sys.argv[2]  # Template file path
-elements = sys.argv[3]  # Elements
-fraction = float(sys.argv[4])  # Fraction of second element
-potential = sys.argv[5]  # The potential used
-potential_type = sys.argv[6]  # The type of potential
-side = int(sys.argv[7])  # The length of the cubic simulation box
-unit_cell_type = sys.argv[8]  # fcc, hcp, or bcc
-lattice_param = float(sys.argv[9])  # The lattice paramter
-timestep = float(sys.argv[10])  # The timestep
-min_style = sys.argv[11]  # The energy minimization style
-iterations = int(sys.argv[12])  # The number of minimization iterations
+template = sys.argv[1]  # Template file path
+elements = sys.argv[2]  # Elements
+potential = sys.argv[3]  # The potential used
+potential_type = sys.argv[4]  # The type of potential
+side = int(sys.argv[5])  # The length of the cubic simulation box
+lattice_param = float(sys.argv[6])  # The lattice paramter
+timestep = float(sys.argv[7])  # The timestep
 
 # Open and read template
 template = open(template)
 template_contents = template.read()
 template.close()
 
-runs = np.arange(runs)
-runs = ['run_'+str(i) for i in runs]
+# Phases
+phases = ['bcc', 'hcp', 'fcc']
 
-for run in runs:
-    contents = run_creator(
-                           template_contents,
-                           elements,
-                           fraction,
-                           potential,
-                           potential_type,
-                           side,
-                           unit_cell_type,
-                           lattice_param,
-                           timestep,
-                           min_style,
-                           iterations
-                           )
+# Modify the potential path based on the subdirectories added
+potential = os.path.join('../../', potential)
 
-    # Write the input file
-    path = os.path.join(run, 'steps.in')
+element_list = elements.split(' ')
 
-    if not os.path.exists(run):
-        os.makedirs(run)
+# Switch between 0 and 1 fraction for binary system
+for el, frac in zip(element_list, np.arange(len(element_list))):
+    for phase in phases:
 
-    file_out = open(path, 'w')
-    file_out.write(contents)
-    file_out.close()
+        path = os.path.join(el, phase)
+
+        contents = run_creator(
+                               template_contents,
+                               elements,
+                               frac,
+                               potential,
+                               potential_type,
+                               side,
+                               phase,
+                               lattice_param,
+                               timestep,
+                               )
+
+        # Write the input file
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        file_out = open(os.path.join(path, 'steps.in'), 'w')
+        file_out.write(contents)
+        file_out.close()

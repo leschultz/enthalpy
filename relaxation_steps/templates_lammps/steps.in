@@ -63,8 +63,12 @@ timestep                                    ${mytimestep}
 ################################################################################
 
 # Start of run
-min_style #replace_min_style#
-#replace_holds#
+fix 1 all box/relax iso 0.0 vmax 0.005
+fix 2 all setforce 0.0 0.0 0.0
+min_style cg
+minimize 1.0e-10 1.0e-9 1000 10000
+unfix 1
+unfix 2
 
 ################################################################################
 

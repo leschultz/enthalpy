@@ -13,16 +13,10 @@ def run_creator(
                 unit_cell_type,
                 lattice_param,
                 timestep,
-                min_style,
-                iterations
                 ):
     '''
     Generate a LAMMPS input file
     '''
-
-    # Minimization parameters
-    iterations = str(iterations)
-    steps = 'minimize 0 0 '+iterations+' '+iterations
 
     # Replace keywords within a template document
     contents = template_contents
@@ -34,8 +28,6 @@ def run_creator(
     contents = contents.replace('#replace_unit_cell_type#', unit_cell_type)
     contents = contents.replace('#replace_lattice_param#', str(lattice_param))
     contents = contents.replace('#replace_timestep#', str(timestep))
-    contents = contents.replace('#replace_min_style#', min_style)
-    contents = contents.replace('#replace_holds#', steps)
 
     return contents
 

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Generate runs
+../../relaxation_steps/run-creator.py\
+        "../../relaxation_steps/templates_lammps/steps.in"\
+	"Al Sm"\
+        "../../relaxation_steps/potentials/AlSm.eam.lammps.fs"\
+	"eam/fs"\
+	17\
+	4.04092655671750\
+	0.001\
+
+# Execute runs
+../../relaxation_steps/execute-runs.py
