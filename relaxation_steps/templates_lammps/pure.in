@@ -20,9 +20,6 @@ variable                                    side                      equal  #re
 variable                                    unit_cell_type            string #replace_unit_cell_type#
 variable                                    lattice_parm              equal  #replace_lattice_param#
 
-# Time variables
-variable                                    mytimestep                equal  #replace_timestep#
-
 # Data output
 variable                                    data_file_characteristics string system.txt
 variable                                    data_file_dump_rate       string traj.lammpstrj
@@ -54,11 +51,6 @@ compute                                     KE          all   ke
 
 # Computed variables
 variable                                    myvol       equal vol
-
-################################################################################
-
-# Time step
-timestep                                    ${mytimestep}
 
 ################################################################################
 

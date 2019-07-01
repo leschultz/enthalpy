@@ -12,7 +12,6 @@ def run_creator(
                 side,
                 unit_cell_type,
                 lattice_param,
-                timestep,
                 ):
     '''
     Generate a LAMMPS input file
@@ -27,7 +26,6 @@ def run_creator(
     contents = contents.replace('#replace_side#', str(side))
     contents = contents.replace('#replace_unit_cell_type#', unit_cell_type)
     contents = contents.replace('#replace_lattice_param#', str(lattice_param))
-    contents = contents.replace('#replace_timestep#', str(timestep))
 
     return contents
 

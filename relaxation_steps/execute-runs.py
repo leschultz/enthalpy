@@ -3,7 +3,7 @@
 import subprocess
 import os
 
-runname = 'steps.in'
+runname = 'pure.in'
 
 paths = []
 count = 0
