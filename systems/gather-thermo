@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Generate runs
+
+../scripts/gather-thermo.py\
+	"./"\
+	"./analysis_export"\
+	"system.txt"\

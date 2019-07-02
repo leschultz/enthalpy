@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Generate runs
-../relaxation_steps/run-creator.py\
+../scripts/run-creator.py\
         "../relaxation_steps/templates_lammps/pure.in"\
         "../potentials"\
 	17\
 	5.00\
 
 # Execute runs
-../relaxation_steps/execute-runs.py
+../scripts/execute-runs.py
