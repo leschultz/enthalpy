@@ -1,0 +1,3 @@
+# Time-averaged data for fix data_saving
+# TimeStep c_Temp c_Press v_Vol c_PE c_KE v_Enth
+74 0 -6.45959e-05 463112 -124276 0 -124276

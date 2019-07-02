@@ -1,0 +1,186 @@
+LAMMPS (8 Feb 2019)
+  using 1 OpenMP thread(s) per MPI task
+# Written by Lane enrique Schultz
+
+###############################################################################
+
+# Starting parameters
+units                                       metal
+atom_style                                  atomic
+dimension                                   3
+boundary                                    p p p
+
+###############################################################################
+
+# Material
+variable                                    fraction                  equal  0
+variable                                    potential                 string ../../../../potentials/NiZr.lammps.eam
+variable                                    potential_type            string eam/alloy
+
+# Geometric
+variable                                    side                      equal  17
+variable                                    unit_cell_type            string bcc
+variable                                    lattice_parm              equal  5.0
+
+# Data output
+variable                                    data_file_characteristics string system.txt
+variable                                    data_file_dump_rate       string traj.lammpstrj
+variable                                    data_positions_final      string final.dat
+variable                                    data_restart              string restart.rest
+
+################################################################################
+
+# Simulation space
+lattice                                     ${unit_cell_type} ${lattice_parm}
+lattice                                     bcc ${lattice_parm}
+lattice                                     bcc 5
+Lattice spacing in x,y,z = 5 5 5
+region                                      my_box block 0 ${side} 0 ${side} 0 ${side}
+region                                      my_box block 0 17 0 ${side} 0 ${side}
+region                                      my_box block 0 17 0 17 0 ${side}
+region                                      my_box block 0 17 0 17 0 17
+create_box                                  2 my_box
+Created orthogonal box = (0 0 0) to (85 85 85)
+  1 by 1 by 1 MPI processor grid
+create_atoms                                1 box
+Created 9826 atoms
+  Time spent = 0.00291128 secs
+set                                         group all type/fraction 2 ${fraction} 1
+set                                         group all type/fraction 2 0 1
+  0 settings made for type/fraction
+
+################################################################################
+
+# Potential Data
+pair_style                                  ${potential_type}
+pair_style                                  eam/alloy
+pair_coeff                                  * * ${potential} Ni Zr
+pair_coeff                                  * * ../../../../potentials/NiZr.lammps.eam Ni Zr
+
+################################################################################
+
+# Computed values by LAMMPS
+compute                                     Temp        all   temp
+compute                                     Press       all   pressure thermo_temp
+compute                                     PE          all   pe
+compute                                     KE          all   ke
+
+# Computed variables
+variable                                    Vol         equal vol
+variable                                    Enth        equal enthalpy
+
+################################################################################
+
+# Start of run
+fix 1 all box/relax iso 0.0 vmax 0.005
+fix 2 all setforce 0.0 0.0 0.0
+min_style cg
+minimize 1.0e-10 1.0e-9 1000 10000
+WARNING: Using 'neigh_modify every 1 delay 0 check yes' setting during minimization (src/min.cpp:168)
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.5
+  ghost atom cutoff = 8.5
+  binsize = 4.25, bins = 20 20 20
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d/newton
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 9.225 | 9.225 | 9.225 Mbytes
+Step Temp E_pair E_mol TotEng Press Volume 
+       0            0   -5305.0698            0   -5305.0698   -22107.832       614125 
+      92            0   -43410.821            0   -43410.821 -0.077219058    106482.11 
+Loop time of 4.54351 on 1 procs for 92 steps with 9826 atoms
+
+99.2% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+        -5305.06980419     -43410.8211006     -43410.8211008
+  Force two-norm initial, final = 25422.2 0.0276104
+  Force max component initial, final = 25422.2 0.0276104
+  Final line search alpha, max atom move = 0.00877828 0.000242371
+  Iterations, force evaluations = 92 96
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 3.1957     | 3.1957     | 3.1957     |   0.0 | 70.33
+Neigh   | 1.1711     | 1.1711     | 1.1711     |   0.0 | 25.78
+Comm    | 0.03805    | 0.03805    | 0.03805    |   0.0 |  0.84
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0.006531   | 0.006531   | 0.006531   |   0.0 |  0.14
+Other   |            | 0.1322     |            |       |  2.91
+
+Nlocal:    9826 ave 9826 max 9826 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    16165 ave 16165 max 16165 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    1.26755e+06 ave 1.26755e+06 max 1.26755e+06 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 1267554
+Ave neighs/atom = 129
+Neighbor list builds = 45
+Dangerous builds = 0
+unfix 1
+unfix 2
+
+################################################################################
+
+# Save atom positions at an interval
+dump                                        my_dump_rate all custom 1 ${data_file_dump_rate} id type xu yu zu
+dump                                        my_dump_rate all custom 1 traj.lammpstrj id type xu yu zu
+dump_modify                                 my_dump_rate sort id
+
+################################################################################
+
+# Open save data
+fix                                         data_saving all ave/time 1 1 1 c_Temp c_Press v_Vol c_PE c_KE v_Enth file ${data_file_characteristics}
+fix                                         data_saving all ave/time 1 1 1 c_Temp c_Press v_Vol c_PE c_KE v_Enth file system.txt
+
+run 0
+Per MPI rank memory allocation (min/avg/max) = 13.48 | 13.48 | 13.48 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+      92            0   -43410.821            0   -43410.821 -0.077219058 
+Loop time of 7.09621e-06 on 1 procs for 0 steps with 9826 atoms
+
+183.2% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 7.096e-06  |            |       |100.00
+
+Nlocal:    9826 ave 9826 max 9826 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    16165 ave 16165 max 16165 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    1.26755e+06 ave 1.26755e+06 max 1.26755e+06 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 1267554
+Ave neighs/atom = 129
+Neighbor list builds = 0
+Dangerous builds = 0
+
+# Close save data
+unfix                                       data_saving
+
+################################################################################
+
+# Data for final position and properties
+write_data                                  ${data_positions_final}
+write_data                                  final.dat
+write_restart                               ${data_restart}
+write_restart                               restart.rest
+Total wall time: 0:00:04
