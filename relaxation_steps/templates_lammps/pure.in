@@ -44,13 +44,14 @@ pair_coeff                                  * * ${potential} #replace_elements#
 ################################################################################
 
 # Computed values by LAMMPS
-compute                                     mytemp      all   temp
-compute                                     mypress     all   pressure thermo_temp
+compute                                     Temp        all   temp
+compute                                     Press       all   pressure thermo_temp
 compute                                     PE          all   pe
 compute                                     KE          all   ke
 
 # Computed variables
-variable                                    myvol       equal vol
+variable                                    Vol         equal vol
+variable                                    Enth        equal enthalpy
 
 ################################################################################
 
@@ -71,7 +72,7 @@ dump_modify                                 my_dump_rate sort id
 ################################################################################
 
 # Open save data
-fix                                         data_saving all ave/time 1 1 1 c_mytemp c_mypress v_myvol c_PE c_KE file ${data_file_characteristics}
+fix                                         data_saving all ave/time 1 1 1 c_Temp c_Press v_Vol c_PE c_KE v_Enth file ${data_file_characteristics}
 
 run 0
 
