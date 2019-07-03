@@ -19,13 +19,41 @@ def run_creator(
 
     # Replace keywords within a template document
     contents = template_contents
-    contents = contents.replace('#replace_elements#', elements)
-    contents = contents.replace('#replace_second_element_fraction#', str(fraction))
-    contents = contents.replace('#replace_potential#', potential)
-    contents = contents.replace('#replace_potential_type#', potential_type)
-    contents = contents.replace('#replace_side#', str(side))
-    contents = contents.replace('#replace_unit_cell_type#', unit_cell_type)
-    contents = contents.replace('#replace_lattice_param#', str(lattice_param))
+
+    contents = contents.replace(
+                                '#replace_elements#',
+                                elements
+                                )
+
+    contents = contents.replace(
+                                '#replace_second_element_fraction#',
+                                str(fraction)
+                                )
+
+    contents = contents.replace(
+                                '#replace_potential#',
+                                potential
+                                )
+
+    contents = contents.replace(
+                                '#replace_potential_type#',
+                                potential_type
+                                )
+
+    contents = contents.replace(
+                                '#replace_side#',
+                                str(side)
+                                )
+
+    contents = contents.replace(
+                                '#replace_unit_cell_type#',
+                                unit_cell_type
+                                )
+
+    contents = contents.replace(
+                                '#replace_lattice_param#',
+                                str(lattice_param)
+                                )
 
     return contents
 
@@ -103,3 +131,23 @@ def system_parse(sysfile):
                 data.append(values)
 
     return columns, data
+
+
+def trajectory_parse(trajfile):
+    '''
+    Pares the trajectory file for relevant system simulation information.
+
+    input:
+        trajfile = The name and path of the trajectory file
+    outputs:
+        natoms = The number of atoms for the system
+    '''
+
+    # Only one trajectory should be in the file so the number
+    with open(trajfile) as f:
+        for line in f:
+            if 'NUMBER OF ATOMS' in line:  # Unique because of single frame
+                line = next(f)
+                natoms = int(line)
+
+    return natoms

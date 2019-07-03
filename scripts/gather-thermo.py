@@ -19,6 +19,7 @@ from functions import *
 runpath = sys.argv[1]  # The top directory of runs
 exportpath = sys.argv[2]  # The export directory for data
 sysfilename = sys.argv[3]  # The name for the thermodynamic data file
+trajfilename = sys.argv[4]  # The name for the trajectory file
 
 # Count the number of runs for progress status
 paths = []
@@ -50,12 +51,16 @@ for path in paths:
 
     # Relevant files
     sysfile = join(path, sysfilename)
+    trajfile = join(path, trajfilename)
 
     # Gather the thermodynamic data
     cols, data = system_parse(sysfile)
 
-    data = [[potential, element, phase]+data[0]]
-    cols = ['potential', 'element', 'phase']+cols
+    # Gather trajectory file paramters
+    natoms = trajectory_parse(trajfile)
+
+    data = [[potential, element, phase, natoms]+data[0]]
+    cols = ['potential', 'element', 'phase', 'atoms']+cols
 
     if count == 0:
         df = pd.DataFrame(data, columns=cols)
