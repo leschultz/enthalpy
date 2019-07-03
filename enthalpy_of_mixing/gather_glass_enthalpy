@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Generate runs
+
+../scripts/gather_glass_enthalpy.py\
+	"/home/nerve/Documents/ben/rc/data"\
+	"./"\
+	"100k_minimize_template.in"\
+	"log.lammps"\
+	"finaltraj.lammpstrj"\
