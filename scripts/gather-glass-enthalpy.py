@@ -87,4 +87,3 @@ df.columns = [
               ]
 
 df.to_csv(os.path.join(export_dir, 'enthalpy_glass_df.txt'), index=False)
-df.to_html(os.path.join(export_dir, 'enthalpy_glass_df.html'), index=False)

@@ -3,7 +3,7 @@
 # Generate runs
 
 ../scripts/gather-thermo.py\
-	"./"\
-	"./analysis_export"\
+	"../systems"\
+	"../gathered_data"\
 	"system.txt"\
 	"traj.lammpstrj"\

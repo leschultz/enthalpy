@@ -2,9 +2,9 @@
 
 # Generate runs
 
-../scripts/gather_glass_enthalpy.py\
+../scripts/gather-glass-enthalpy.py\
 	"/home/nerve/Documents/ben/rc/data"\
-	"./"\
+	"../gathered_data"\
 	"100k_minimize_template.in"\
 	"log.lammps"\
 	"finaltraj.lammpstrj"\

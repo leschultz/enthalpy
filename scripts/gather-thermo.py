@@ -47,7 +47,7 @@ for path in paths:
 
     split = path.split('/')
 
-    potential, element, phase = split[1:]
+    potential, element, phase = split[2:]
 
     # Relevant files
     sysfile = join(path, sysfilename)
