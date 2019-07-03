@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Generate runs
+# Gather the enthalpy values from glassy phase runs
 
 ../scripts/gather-glass-enthalpy.py\
 	"/home/nerve/Documents/ben/rc/data"\

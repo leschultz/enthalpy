@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Generate runs
+# Gather thermodynamic data from bcc, fcc, and hcp runs
 
 ../scripts/gather-thermo.py\
 	"../systems"\
