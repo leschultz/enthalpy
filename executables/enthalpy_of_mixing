@@ -5,3 +5,4 @@
 ../scripts/enthalpy-of-mixing.py\
 	"../gathered_data/run_thermo_data.txt"\
 	"../gathered_data/enthalpy_glass_mean_df.txt"\
+        "../gathered_data"\
